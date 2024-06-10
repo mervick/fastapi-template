@@ -1,0 +1,63 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-toml
+      - id: check-yaml
+        args:
+          - --unsafe
+
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: local
+    hooks:
+      - id: isort
+        name: Format code with isort
+        language: system
+        entry: poetry run isort
+        pass_filenames: true
+        types:
+          - python
+
+      - id: black
+        name: Format code with black
+        language: system
+        entry: poetry run black
+        pass_filenames: true
+        types:
+          - python
+
+      - id: dotenv-linter
+        name: Check .env files
+        language: system
+        entry: poetry run dotenv-linter .env.example
+        pass_filenames: false
+
+      - id: ruff
+        name: Check code style with Ruff
+        language: system
+        entry: poetry run ruff check .
+        pass_filenames: false
+        types:
+          - python
+
+      - id: mypy
+        name: Check static types with mypy
+        language: system
+        entry: poetry run mypy .
+        pass_filenames: false
+        types_or:
+          - python
+          - pyi
+
+      - id: poetry
+        name: Check the validity of the pyproject.toml file
+        language: system
+        entry: poetry run poetry check
+        pass_filenames: false
+        types:
+          - toml

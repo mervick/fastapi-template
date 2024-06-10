@@ -1,0 +1,20 @@
+stages:
+  - test
+
+.poetry-extras:
+  variables:
+    PIP_NO_CACHE_DIR: "off"
+  before_script:
+    - curl -sSL https://install.python-poetry.org | python -
+    - export PATH=$PATH:$HOME/.local/bin
+    - poetry config virtualenvs.create false
+    - poetry install --no-interaction --no-ansi --no-cache
+    - poetry run alembic upgrade head
+
+test:
+  stage: test
+  image: python:3.12.3
+  extends:
+    - .poetry-extras
+  script:
+    - make all

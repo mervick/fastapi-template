@@ -1,0 +1,158 @@
+[tool.poetry]
+name = "auth"
+version = "0.1.0"
+description = ""
+authors = ["Ruslan Korneev <admin@ruslan.beer>"]
+readme = "README.md"
+packages = [{ include = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.12.4"
+
+# web-framework
+pydantic = { extras = ["email"], version = "^2.6.0" }
+pydantic-settings = "^2.1.0"
+fastapi = ">=0.111.0"
+uvicorn = ">=0.30.1"
+httpx = ">=0.27.0"
+
+# database
+sqlalchemy = { extras = ["asyncio"], version = "^2.0.25" }
+asyncpg = "^0.29.0"
+alembic = "^1.13.1"
+
+# other
+loguru = ">=0.7.2"
+sentry-sdk = {version = ">=2.5.1", extras = ["asyncpg", "fastapi", "loguru"]}
+
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.21.0"
+
+# linters and formatters
+isort = "^5.13.2"
+black = "^24.1.1"
+ruff = "^0.1.15"
+mypy = "^1.8.0"
+dotenv-linter = "^0.4.0"
+pre-commit = "^3.6.0"
+
+# testing
+pytest = "<8"
+pytest-asyncio = "^0.21.1"
+pytest-xdist = "^3.5.0"
+pytest-freezegun = "^0.4.2"
+pytest-mock = "^3.12.0"
+pytest-env = "^1.1.3"
+pytest-cov = "^4.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+skip = ["migrations"]
+
+[tool.black]
+exclude = '''
+/(
+  | migrations
+  | .venv
+)/
+'''
+line_length = 120
+
+
+[tool.ruff]
+
+# 'flake8-bugbear' -> 'lint.flake8-bugbear'\n"
+# set of rules
+lint.select = [
+  "E",  # pycodestyle
+  "F",  # Pyflakes
+  "N",  # pep8-naming
+  "UP", # pyupgrade
+  "BLE", # flake8-blind-except
+  "B",   # flake8-bugbear
+  "A",   # flake8-builtins
+  "C4",  # flake8-comprehensions
+  "DTZ", # flake8-datetimez
+  "DJ",  # flake8-django
+  "EXE", # flake8-executable
+  "FA",  # flake8-future-annotations
+  "ISC", # flake8-implicit-str-concat
+  "G",   # flake8-logging-format
+  "INP", # flake8-logging-format
+  "PIE", # flake8-pie
+  "T20", # flake8-print
+  "PYI", # flake8-pyi
+  "PT",  # flake8-pyi
+  "Q",   # flake8-quotes
+  "SIM", # flake8-simplify
+  "TID", # flake8-tidy-imports
+  "INT", # flake8-gettext
+  "PTH", # flake8-use-pathlib
+  "FIX", # flake8-fixme
+  # Ruff-specific rules
+  "RUF008", # Do not use mutable default values for dataclass attributes
+  "RUF009", # Do not perform function call {name} in dataclass defaults
+  "RUF010", # Use explicit conversion flag
+  "B035", # Dictionary comprehension uses static key: {key}
+  "RUF012",  # Mutable class attributes should be annotated with typing.ClassVar
+  "RUF013", # PEP 484 prohibits implicit Optional
+  "RUF015", # Prefer next({iterable}) over single element slice
+  "RUF016", # Slice in indexed access to type {value_type} uses type {index_type} instead of an integer.
+  "RUF100", # Unused noqa directive
+  "RUF200", # Failed to parse pyproject.toml
+  "FIX002", # Line contains TODO, consider resolving the issue
+]
+lint.ignore = [
+  "N806",   # Variable `UpperCase` in function should be lowercase
+]
+
+fix = true
+line-length = 120
+target-version = "py312"
+extend-exclude = [".venv", "venv", "migrations"]
+
+[tool.ruff.flake8-bugbear]
+extend-immutable-calls = [
+  "fastapi.Depends",
+  "fastapi.params.Depends",
+  "fastapi.Query",
+  "fastapi.params.Query",
+]
+
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["sqlalchemy.ext.mypy.plugin"]
+exclude = ["migrations"]
+warn_unused_configs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unreachable = true
+warn_no_return = true
+namespace_packages = true
+explicit_package_bases = true
+disallow_untyped_defs = true
+disallow_untyped_calls = false
+strict = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = ["asyncpg", "asyncpg.exceptions"]
+ignore_missing_imports = true
+
+
+[tool.pytest.ini_options]
+python_files = "tests_*.py test_*.py"
+asyncio_mode = "auto"
+addopts = "--cov-report term-missing:skip-covered --cov=src --no-cov-on-fail  --capture tee-sys"
+filterwarnings = ["ignore::DeprecationWarning:pytest_freezegun.*:"]
+
+[tool.coverage.run]
+parallel = true
+omit = ["**/tests/*"]

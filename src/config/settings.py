@@ -4,11 +4,18 @@ from typing import Any
 
 from loguru import logger
 from pydantic import PostgresDsn, field_validator
+from pydantic._internal._model_construction import ModelMetaclass
 from pydantic_core.core_schema import ValidationInfo
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from src.core.types.singleton import SingletonMeta
 
-class Settings(BaseSettings):
+
+class MySettingsMeta(SingletonMeta, ModelMetaclass):
+    ...
+
+
+class Settings(BaseSettings, metaclass=MySettingsMeta):
     """
     Base settings for all backend.
     """
@@ -60,6 +67,7 @@ class Settings(BaseSettings):
         case_sensitive=False,
         validate_assignment=True,
         extra="ignore",  # ignores extra keys from env file
+        frozen=True,
     )
 
 

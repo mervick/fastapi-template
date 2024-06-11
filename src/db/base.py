@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Any, ClassVar
 
 from sqlalchemy import TIMESTAMP, UUID, MetaData
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -19,7 +19,7 @@ POSTGRES_NAMING_CONVENTION = {
 class SAModel(DeclarativeBase):
     __tablename__: str
     metadata = MetaData(naming_convention=POSTGRES_NAMING_CONVENTION)
-    type_annotation_map = {
+    type_annotation_map: ClassVar[dict[type, Any]] = {
         datetime: TIMESTAMP(timezone=True),
         uuid.UUID: Annotated[
             uuid.UUID,

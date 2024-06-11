@@ -32,7 +32,7 @@ ipython = "^8.21.0"
 # linters and formatters
 isort = "^5.13.2"
 black = "^24.1.1"
-ruff = "^0.1.15"
+ruff = ">=0.4.8"
 mypy = "^1.8.0"
 dotenv-linter = "^0.4.0"
 pre-commit = "^3.6.0"
@@ -117,7 +117,7 @@ line-length = 120
 target-version = "py312"
 extend-exclude = [".venv", "venv", "migrations"]
 
-[tool.ruff.flake8-bugbear]
+[tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = [
   "fastapi.Depends",
   "fastapi.params.Depends",

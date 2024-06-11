@@ -11,8 +11,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from src.core.types.singleton import SingletonMeta
 
 
-class MySettingsMeta(SingletonMeta, ModelMetaclass):
-    ...
+class MySettingsMeta(SingletonMeta, ModelMetaclass): ...
 
 
 class Settings(BaseSettings, metaclass=MySettingsMeta):
@@ -31,8 +30,8 @@ class Settings(BaseSettings, metaclass=MySettingsMeta):
     ALLOWED_HEADERS: list[str] = ["*"]
 
     API_V1_STR: str = "/api/v1"
-
     PROJECT_NAME: str = "FastAPI Template"
+    SERVER_HOST: str = "0.0.0.0"
 
     SENTRY_DSN: str = ""
 

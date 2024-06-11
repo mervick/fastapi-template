@@ -1,6 +1,6 @@
 from sqlalchemy import select
-from src.core.types.repositories import BaseRepository
 
+from src.core.types.repositories import BaseRepository
 from src.db.models import AuthUser
 
 

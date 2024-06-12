@@ -95,6 +95,7 @@ jobs:
           cache: "poetry"
 
       - run: |
+          poetry run alembic upgrade head
           poetry run alembic check
 
   pytest:

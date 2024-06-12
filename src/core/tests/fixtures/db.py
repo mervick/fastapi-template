@@ -16,7 +16,7 @@ from src.core.tests.utils import upgrade_database
 
 @pytest.fixture(scope="session")
 def postgres_test_db_name(request: pytest.FixtureRequest) -> str:
-    db_name = f"test_{settings.POSTGRES_DB}"
+    db_name = f"test-{settings.POSTGRES_DB}"
     xdist_suffix = getattr(request.config, "workerinput", {}).get("workerid")
     if xdist_suffix:
         # Put a suffix like _gw0, _gw1 etc on xdist processes
@@ -50,8 +50,8 @@ async def _create_test_db_if_not_exists(postgres_test_db_name: str) -> None:
     # used for application order
     "_create_test_db_if_not_exists",
 )
-def _mock_postgres_url(postgres_test_db_url: str) -> None:
-    settings.POSTGRES_URL = postgres_test_db_url
+def _mock_postgres_url(postgres_test_db_url: str, monkeysession: pytest.MonkeyPatch) -> None:
+    monkeysession.setattr("src.config.settings.settings.POSTGRES_URL", postgres_test_db_url)
 
 
 @pytest_asyncio.fixture(scope="session")

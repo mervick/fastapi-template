@@ -18,6 +18,7 @@ from src.core.types.singleton import SingletonMeta
 
 class ApplicationConfig(metaclass=SingletonMeta):
     __slots__ = ("_asgi_app",)
+    _asgi_app: FastAPI
 
     def __init__(self) -> None:
         """

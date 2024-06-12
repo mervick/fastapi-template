@@ -31,7 +31,6 @@ class Settings(BaseSettings, metaclass=MySettingsMeta):
 
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "FastAPI Template"
-    SERVER_HOST: str = "0.0.0.0"
 
     SENTRY_DSN: str = ""
 
@@ -66,7 +65,6 @@ class Settings(BaseSettings, metaclass=MySettingsMeta):
         case_sensitive=False,
         validate_assignment=True,
         extra="ignore",  # ignores extra keys from env file
-        frozen=True,
     )
 
 

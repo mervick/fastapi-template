@@ -1,4 +1,4 @@
-from src.core.tests.fixtures.common import event_loop
+from src.core.tests.fixtures.common import event_loop, monkeysession
 from src.core.tests.fixtures.db import (
     _create_test_db_if_not_exists,
     _migrate_database,
@@ -14,6 +14,7 @@ from src.core.tests.fixtures.fastapi import _override_fastapi_dependencies, api_
 
 __all__ = [
     "event_loop",
+    "monkeysession",
     "_create_test_db_if_not_exists",
     "_migrate_database",
     "_mock_postgres_url",

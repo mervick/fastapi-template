@@ -1,10 +1,10 @@
 import alembic.command
 import alembic.config
-from sqlalchemy.ext.asyncio import AsyncConnection
+from sqlalchemy import Connection
 
 
 def upgrade_database(
-    connection: AsyncConnection,
+    connection: Connection,
     alembic_config: alembic.config.Config,
 ) -> None:
     alembic_config.attributes["connection"] = connection

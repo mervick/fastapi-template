@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any
 
 from loguru import logger
-from pydantic import PostgresDsn, field_validator
+from pydantic import AnyHttpUrl, PostgresDsn, field_validator
 from pydantic._internal._model_construction import ModelMetaclass
 from pydantic_core.core_schema import ValidationInfo
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -25,9 +25,7 @@ class Settings(BaseSettings, metaclass=MySettingsMeta):
     DEBUG: bool = False
     SECRET_KEY: str = "super-secret-key"
 
-    ALLOWED_ORIGINS: list[str] = ["*"]
-    ALLOWED_METHODS: list[str] = ["*"]
-    ALLOWED_HEADERS: list[str] = ["*"]
+    BACKEND_CORS_ORIGINS: list[str | AnyHttpUrl] = ["*"]
 
     API_V1_STR: str = "/api/v1"
     PROJECT_NAME: str = "FastAPI Template"

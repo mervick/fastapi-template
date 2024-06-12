@@ -55,13 +55,15 @@ class ApplicationConfig(metaclass=SingletonMeta):
         """
         Collecting all middleware for ASGI get_app here
         """
-        self._asgi_app.add_middleware(
-            CORSMiddleware,
-            allow_origins=settings.ALLOWED_ORIGINS,
-            allow_credentials=True,
-            allow_methods=settings.ALLOWED_METHODS,
-            allow_headers=settings.ALLOWED_HEADERS,
-        )
+
+        if settings.BACKEND_CORS_ORIGINS:
+            self._asgi_app.add_middleware(
+                CORSMiddleware,
+                allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
+                allow_credentials=True,
+                allow_methods=["*"],
+                allow_headers=["*"],
+            )
 
     def _collect_exception_handler(self) -> None:
         self._asgi_app.exception_handler(IntegrityError)(

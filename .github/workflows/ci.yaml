@@ -1,0 +1,129 @@
+name: Continuous Integration
+
+on: [push]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v5
+        id: cp312
+        with:
+          python-version: "3.12.4"
+          cache: "poetry"
+      - run: poetry run poetry install
+        if: steps.cp312.outputs.cache-hit != 'true'
+
+  linter:
+    name: Linter Ruff
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v5
+        id: cp312
+        with:
+          python-version: "3.12.4"
+          cache: "poetry"
+
+      - run: poetry run ruff check .
+
+  mypy:
+    name: Mypy Type Checking
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v5
+        id: cp312
+        with:
+          python-version: "3.12.4"
+          cache: "poetry"
+
+      - run: poetry run mypy .
+
+  isort:
+    name: Imports Sorting
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v5
+        id: cp312
+        with:
+          python-version: "3.12.4"
+          cache: "poetry"
+
+      - run: poetry run isort .
+
+  check-migrations:
+    name: Check Migrations
+    needs: build
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v5
+        id: cp312
+        with:
+          python-version: "3.12.4"
+          cache: "poetry"
+
+      - run: |
+          poetry run alembic check
+
+  pytest:
+    name: Pytest
+    needs: build
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
+      - uses: actions/setup-python@v5
+        id: cp312
+        with:
+          python-version: "3.12.4"
+          cache: "poetry"
+
+      - run: |
+          poetry run pytest --numprocesses logical --dist worksteal

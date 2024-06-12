@@ -2,7 +2,7 @@
 auth-user
 
 Revision ID: 8bf81d788c31
-Revises: 
+Revises:
 Date: 2024-06-10 18:34:29.725392+00:00
 """
 

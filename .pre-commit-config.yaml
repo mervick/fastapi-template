@@ -20,6 +20,7 @@ repos:
         language: system
         entry: poetry run isort
         pass_filenames: true
+        exclude: ^migrations/versions/
         types:
           - python
 
@@ -42,6 +43,7 @@ repos:
         language: system
         entry: poetry run ruff check .
         pass_filenames: false
+        exclude: ^migrations/versions/
         types:
           - python
 
